@@ -110,15 +110,15 @@ Utiliser [PuTTY](http://www.putty.org/)
 
  Exemple de ficher :
 
-	\#Fichier de configuration du shutter 22/09/2015 by Patrice Vieyra
-	\#Toujours laisser une ligne vide à la fin
+		#Fichier de configuration du shutter 22/09/2015 by Patrice Vieyra
+		#Toujours laisser une ligne vide à la fin
 
-	shutter_osc_Ip : 192.168.0.9
-	shutter_osc_Port : 8000
-	master_osc_Ip : 192.168.0.40
-	master_osc_Port : 9000
-	shutter_dmx_channel : 201
-	shutter_dmx_nb : 3
+		shutter_osc_Ip : 192.168.0.9
+		shutter_osc_Port : 8000
+		master_osc_Ip : 192.168.0.40
+		master_osc_Port : 9000
+		shutter_dmx_channel : 201
+		shutter_dmx_nb : 3
 
 
  Les éléments relatifs au DMX sont juste là à titre indicatif et ne sont pas utilisés dans cette version
