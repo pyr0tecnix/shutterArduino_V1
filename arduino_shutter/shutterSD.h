@@ -5,7 +5,7 @@
   Librairie contenant les librairies propres à la manipulation de la carte SD
   LA carte SD sert ici à concerver le fichier de configuration qui doit imperativement s'appeler CONFIG.TXT
 
-  Exemple de ficher : 
+  Exemple de ficher :
 
   #Fichier de configuration du shutter 22/09/2015 by Patrice Vieyra
   #Toujours laisser une ligne vide à la fin
@@ -23,14 +23,15 @@
   1 . initSD : Fonction d'initialisation de la communication avec la carte SD
 
   2. setupConfig : Fonction de lecture de la config. Les valeurs lues servent à mettre à jour les variables du programme
-  
-  modifié le 22 septembre 2015
+
+  modifié le 25 février 2016
   par Patrice Vieyra
- */
+*/
 
 #ifndef shutterSD
 #define shutterSD
 
+#include <SPI.h>
 #include <SD.h> //Librairie Arduino qui gère les cartes SD
 #include <String.h> //Librairie standard
 
@@ -38,12 +39,12 @@
 #define BUFFER_SIZE 32   //Taille du buffer de ligne
 
 /* Fonction d'initialisation de la communication avec la carte SD
- * Port utilisé pour la carte SD : SDCARD_CS 4
- */
+   Port utilisé pour la carte SD : SDCARD_CS 4
+*/
 void initSD() {
 
   Serial.print("Initialisation carte SD...");
-  pinMode(SDCARD_CS, OUTPUT);
+  //pinMode(SDCARD_CS, OUTPUT);
   if (!SD.begin(SDCARD_CS)) {
     Serial.println("Echec Initialisation");
     return;
@@ -52,20 +53,19 @@ void initSD() {
 }
 
 /* Fonction qui va lire la configuration située dans le fichier CONFIG.TXT et stockée dans la carte SD
- * Paramètres : chaîne de caractères contenant le nom du fichier de configuration
- *              pointeur vers l'adresse IP du shutter
- *              pointeur vers l'adresse IP du maître
- *              pointeur vers le port du shutter
- *              pointeur vers le port du maître
- */
-void setupConfig(char* configName, IPAddress* shutter_osc_ip, IPAddress* master_osc_ip, unsigned int* shutter_osc_port, unsigned int* master_osc_port) {
+   Paramètres : chaîne de caractères contenant le nom du fichier de configuration
+                pointeur vers l'adresse IP du shutter
+                pointeur vers l'adresse IP du maître
+                pointeur vers le port du shutter
+                pointeur vers le port du maître
+*/
+void setupConfig(String configName, IPAddress* shutter_osc_ip, IPAddress* master_osc_ip, unsigned int* shutter_osc_port, unsigned int* master_osc_port) {
 
   /*Variables locales*/
   char* ip0; //Variable temporaire de stockage du byte[0] des adresses IP
   char* ip1; //Variable temporaire de stockage du byte[1] des adresses IP
   char* ip2; //Variable temporaire de stockage du byte[2] des adresses IP
   char* ip3; //Variable temporaire de stockage du byte[3] des adresses IP
-  File configFile;
 
 
   //Déclare le buffer qui stockera une ligne du fichier, ainsi que les deux pointeurs key et value
@@ -76,9 +76,11 @@ void setupConfig(char* configName, IPAddress* shutter_osc_ip, IPAddress* master_
 
   //Ouverture du fichier de configuration
   Serial.println("Début de la lecture du fichier de configuration..");
-  configFile = SD.open(configName, FILE_READ);
+  File configFile = SD.open("config.txt");
   if (!configFile) { // Gère les erreurs
-    Serial.println("Erreur d'ouverture du fichier !");
+    Serial.print("Erreur d'ouverture du fichier ");
+    Serial.println(configName);
+
     for (;;);
   }
 
@@ -100,11 +102,6 @@ void setupConfig(char* configName, IPAddress* shutter_osc_ip, IPAddress* master_
     }
     /* On garde de côté le nombre de char stocké dans le buffer */
     buffer_lenght = i;
-    /* Gestion des lignes trop grande */
-    if (i == BUFFER_SIZE) {
-      Serial.print("Ligne trop longue à la ligne ");
-      Serial.println(line_counter, DEC);
-    }
     /* Finalise la chaine de caractéres ASCIIZ en supprimant le \n au passage */
     buffer[--i] = '\0';
 
@@ -129,8 +126,6 @@ void setupConfig(char* configName, IPAddress* shutter_osc_ip, IPAddress* master_
       if (buffer[i] == ' ' || buffer[i] == '\t') buffer[i] = '\0';
 
       if (++i == buffer_lenght) {
-        Serial.print("Ligne mal forme a la ligne ");
-        Serial.println(line_counter, DEC);
         break; // Ignore les lignes mal formé
       }
     }
@@ -142,8 +137,6 @@ void setupConfig(char* configName, IPAddress* shutter_osc_ip, IPAddress* master_
     /* Cherche l'emplacement de la valeur en ignorant les espaces et les tabulations âpres le séparateur */
     while (buffer[i] == ' ' || buffer[i] == '\t') {
       if (++i == buffer_lenght) {
-        Serial.print("Ligne mal forme a la ligne ");
-        Serial.println(line_counter, DEC);
         break; // Ignore les lignes mal formé
       }
     }
@@ -151,7 +144,7 @@ void setupConfig(char* configName, IPAddress* shutter_osc_ip, IPAddress* master_
     value = &buffer[i];
 
     /* Transforme les données texte en valeur utilisable */
-    
+
     /*OSC*/
     if (strcmp(key, "shutter_osc_Ip") == 0) {
       char* t;
@@ -177,13 +170,8 @@ void setupConfig(char* configName, IPAddress* shutter_osc_ip, IPAddress* master_
     else if (strcmp(key, "master_osc_Port") == 0) {
       *master_osc_port = atoi(value);
     }
-    else { // Default
-      Serial.print("Clé de configuration inconue : ");
-      Serial.println(key);
-    }
-
-    /*DMX*/
   }
+
   /* Ferme le fichier de configuration */
   configFile.close();
 }

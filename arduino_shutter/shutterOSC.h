@@ -26,7 +26,7 @@
                            Cette position correspond directement à l'angle du servomoteur. Il n'y a
                            que deux valeurs possibles, la plus petite correspond à la position de repos
                            shutter inactif.
-                           
+
   3. rebootShutter : Fonction permettant de faire un soft reboot du shutter. Il y a plusieurs valeurs de timeout prédéfinies. Nous utilisons 1S
 
   4. receiveOSC : Fonction chargée de recevoir les trames OSC et faire le dispatch
@@ -36,12 +36,14 @@
                     /shutter_reboot   shutterReboot()
                     /shutter_move     shutterMove() située dans shutterServo
 
-  modifié le 10 novembre 2015
+  modifié le 25 février 2016
   par Patrice Vieyra
- */
+*/
 
 #ifndef shutterOSC
 #define shutterOSC
+
+#define UNUSED(x) (void)(x) //Macro permettant d'éviter le warning unused but set parameter
 
 #include <Ethernet.h> //Libraire Arduino qui gère l'ethernet
 #include <EthernetUdp.h> //Librairie Arduino qui gère l'UDP
@@ -57,10 +59,10 @@ unsigned int master_osc_port; //Port d'envoi vers le maître stockée sur la car
 EthernetUDP Udp;
 
 /*
- * Fonction d'initialisation de la communication via OSC
- * Cette fonction doit être appelée après avoir récupéré le fichier de configuration stockée dans la carte SD
- * A la fin de l'initialisation on test le shutter en envoyant les commandes d'ouverture et de fermeture à la suite
- */
+   Fonction d'initialisation de la communication via OSC
+   Cette fonction doit être appelée après avoir récupéré le fichier de configuration stockée dans la carte SD
+   A la fin de l'initialisation on test le shutter en envoyant les commandes d'ouverture et de fermeture à la suite
+*/
 void initOSC() {
 
   Serial.print("Initialisation OSC...");
@@ -81,10 +83,13 @@ void initOSC() {
   testServo();
 }
 /* Fonction qui envoie la position du shutter
- * Paramètres : référence vers un OSCMessage - inutilisée dans notre application
- *              entier représentant un offset - inutilisé dans notre application
- */
+   Paramètres : référence vers un OSCMessage - inutilisée dans notre application
+                entier représentant un offset - inutilisé dans notre application
+*/
 void getPositionShutter(OSCMessage &msg, int addrOffset) {
+  /*Opérations permettant de supprimer les warnings de non utilisation des variables*/
+  UNUSED(addrOffset);
+
   msg.empty();
   msg.add("/shutter_position/");
   msg.add((int)positionShutter);
@@ -98,9 +103,14 @@ void getPositionShutter(OSCMessage &msg, int addrOffset) {
 }
 
 /*
- * Fonction de soft reset de l'Arduino. Basée sur le Watchdog, on reset tout le hardware
- */
+   Fonction de soft reset de l'Arduino. Basée sur le Watchdog, on reset tout le hardware
+*/
 void rebootShutter(OSCMessage &msg, int addrOffset) {
+
+  /*Opérations permettant de supprimer les warnings de non utilisation des variables*/
+  msg.empty();
+  UNUSED(addrOffset);
+
   /* Différentes valeurs de Timeout
     WDTO_15MS
     WDTO_30MS
@@ -121,11 +131,11 @@ void rebootShutter(OSCMessage &msg, int addrOffset) {
 }
 
 /* Fonction de réception des trames OSC
- * Cette fonction s'occupe également de dispatcher les commandes
- * /shutter_on       closeShutter()  située dans shutterServo
- * /shutter_off      openShutter()   située dans shutterServo
- * /shutter_position getPositionShutter()
- */
+   Cette fonction s'occupe également de dispatcher les commandes
+   /shutter_on       closeShutter()  située dans shutterServo
+   /shutter_off      openShutter()   située dans shutterServo
+   /shutter_position getPositionShutter()
+*/
 void receiveOSC() {
   OSCMessage msgIN;
   int size;

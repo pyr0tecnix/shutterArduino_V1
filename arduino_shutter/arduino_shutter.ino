@@ -13,7 +13,7 @@
     /shuter_position/   Requiert la position du shutter qui répond /shutter_position/p où p est un entier qui a deux valeurs possibles. 
                         La plus petite correspond à la position de repos (shutter inactif). Les valeurs correspondent directement à l'angle du servomoteur
 
-  modifié le 22 septembre 2015
+  modifié le 25 février 2016
   par Patrice Vieyra
  */
 
@@ -39,10 +39,6 @@ commandMode selectedMode;
 // the setup function runs once when you press reset or power the board
 void setup() {
   Serial.begin(9600);
-  // On the Ethernet Shield, CS is pin 4. It's set as an output by default.
-  // Note that even if it's not used as the CS pin, the hardware SS pin
-  // (10 on most Arduino boards, 53 on the Mega) must be left as an output
-  // or the SD library functions will not work.
 
   // On inhibe la partie ethernet pour pouvoir utiliser la carte SD
   pinMode(W5200_CS, OUTPUT);

@@ -9,7 +9,7 @@
   2 . findCommandMode : Fonction renvoyant le mode de commande sélectionné. Pour le moment le mode OSC est fixé en dur
   
 
-  modifié le 22 septembre 2015
+  modifié le 25 février 2016
   par Patrice Vieyra
  */
 

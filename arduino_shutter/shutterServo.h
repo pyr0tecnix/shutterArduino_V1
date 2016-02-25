@@ -22,9 +22,9 @@
 
   4. closeShutter : Fonction mettant le shutter en position de repos s'il était dans une position différente
 
-  modifié le 22 septembre 2015
+  modifié le 25 février 2016
   par Patrice Vieyra
- */
+*/
 
 #ifndef shutterServo
 #define shutterServo
@@ -33,6 +33,7 @@
 
 #define dShutterOn 105 // Position de travail, cache baissé
 #define dShutterOff 5 // Position de repos, cache relevé
+#define UNUSED(x) (void)(x) //Macro permettant d'éviter le warning unused but set parameter
 
 Servo shutterServomoteur;  // Création de l'objet servomoteur
 int positionShutter = 0; // Permet de conserver la position du servomoteur
@@ -44,8 +45,8 @@ void testServo() {
 }
 
 /* Fonction d'initialisation du servomoteur
- * Le shutter est automatiquement mis en position de repos
- */
+   Le shutter est automatiquement mis en position de repos
+*/
 void initServo() {
   Serial.print("Initialisation du servomoteur...");
   shutterServomoteur.attach(9); //Connexion du servomoteur sur la PIN110 de l'aruino <=> Servo1 sur la platine Adafruit
@@ -55,11 +56,15 @@ void initServo() {
 }
 
 /* Fonction permettant de mettre le shutter en position de repos s'il est dans une position différente
- * Paramètres : référence vers un OSCMessage - inutilisée dans notre application
- *                 entier représentant un offset - inutilisé dans notre application
- */
+   Paramètres : référence vers un OSCMessage - inutilisée dans notre application
+                   entier représentant un offset - inutilisé dans notre application
+*/
 void openShutter(OSCMessage &msg, int addrOffset) {
 
+  /*Opérations permettant de supprimer les warnings de non utilisation des variables*/
+  msg.empty();
+  UNUSED(addrOffset);
+  
   //Si le servomoteur est dans une position autre que sa position de repos, on le met en position de repos
   if (positionShutter != dShutterOff) {
     shutterServomoteur.write(dShutterOff);
@@ -70,11 +75,15 @@ void openShutter(OSCMessage &msg, int addrOffset) {
 }
 
 /* Fonction permettant de mettre le shutter en position de travail s'il est dans une position différente
- * Paramètres : référence vers un OSCMessage - inutilisée dans notre application
- *              entier représentant un offset - inutilisé dans notre application
- */
+   Paramètres : référence vers un OSCMessage - inutilisée dans notre application
+                entier représentant un offset - inutilisé dans notre application
+*/
 void closeShutter(OSCMessage &msg, int addrOffset) {
 
+  /*Opérations permettant de supprimer les warnings de non utilisation des variables*/
+  msg.empty();
+  UNUSED(addrOffset);
+  
   //Si le servomoteur est dans une position autre que sa position de travail, on le met en position de travail
   if (positionShutter != dShutterOn) {
     shutterServomoteur.write(dShutterOn);
@@ -85,10 +94,14 @@ void closeShutter(OSCMessage &msg, int addrOffset) {
 }
 
 /* Fonction permettant mapper une valeur bornée dans les bornes du servomoteur
- * Paramètres : référence vers un OSCMessage - va contenir la valeur entre 0 et 100
- *              entier représentant un offset - inutilisé dans notre application
- */
+   Paramètres : référence vers un OSCMessage - va contenir la valeur entre 0 et 100
+                entier représentant un offset - inutilisé dans notre application
+*/
 void moveShutter(OSCMessage &msg, int addrOffset) {
+  /*Non testé*/
+  /*Opérations permettant de supprimer les warnings de non utilisation des variables*/
+  UNUSED(addrOffset);
+  
   if (msg.isInt(0)) {
     positionShutter = msg.getInt(0);
     shutterServomoteur.write(map(positionShutter, 0, 100, 0, 180));
