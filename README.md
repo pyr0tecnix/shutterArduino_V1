@@ -29,6 +29,13 @@ Ouverture et fermeture commandé par OSC, le shutter est également capable de r
 
 ### Linux et Mac Os ###
 
+Utiliser la commande `screen` qui est installée par défaut sur les versions récentes de Mac OS et certaines distributions de Linux.
+
+Dans le cas contraire, installer `screen`à l'aide du gestionnaire de paquet propre à votre distribution :
+* [ArchLinux](https://wiki.archlinux.org/index.php/GNU_Screen)
+* [Debian](https://wiki.debian.org/fr/Screen)
+* [Ubuntu](https://doc.ubuntu-fr.org/screen)
+
 Ouvrir le terminal et lancer `screen /dev/cu.usbmodem1411 9600`
 
 Pour quitter `screen` appuyer sur **CTRL-A
@@ -39,18 +46,18 @@ Utiliser [PuTTY](http://www.putty.org/)
 
 ## Glossaire des trames ##
 
-* shutter_on
+* /shutter_on
 	* Mets le shutter en position de travail (cache devant la lentille)
-* shutter_off
+* /shutter_off
 	* Mets le shutter en position de repos (cache relevé)
 
-* shutter_position
+* /shutter_position
 	* Envoie une demande de position au shutter qui répond /shutter_position/(int)
 
-* shutter_reboot
+* /shutter_reboot
 	* Envoie une demande de reboot au shutter
 
-* shutter_move/(int)
+* /shutter_move/(int)
 	* Envoie une demande de déplacement au shutter : le int est compris entre 0(min) et 100(max)
 
 ## Bibliothèques utilisées ##
