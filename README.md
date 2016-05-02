@@ -14,7 +14,6 @@ Ouverture et fermeture commandé par OSC, le shutter est également capable de r
 	* [Neuftech® Ethernet shield module W5100 avec module Micro SD](http://www.amazon.fr/dp/B00PQA6G8O/ref=sr_ph?ie=UTF8&qid=1456398408&sr=1&keywords=neuftech)
 * Servomoteur :
 	* [Microservo tower pro SG90](http://boutique.semageek.com/fr/104-micro-servo-tower-pro-sg90.html)
-	* [Servo numérique 8525 MG-D](http://www.a2pro-online.com/servo-numerique-7525-mg-d.html)
 
 
 ## Mise en route ##
@@ -38,7 +37,7 @@ Dans le cas contraire, installer `screen`à l'aide du gestionnaire de paquet pro
 
 Ouvrir le terminal et lancer `screen /dev/cu.usbmodem1411 9600`
 
-Pour quitter `screen` appuyer sur **CTRL-A
+Pour quitter `screen` appuyer sur **CTRL-A**
 
 ### Windows ###
 
