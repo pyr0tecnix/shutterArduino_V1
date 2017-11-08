@@ -36,7 +36,7 @@
 #define UNUSED(x) (void)(x) //Macro permettant d'éviter le warning unused but set parameter
 
 Servo shutterServomoteur;  // Création de l'objet servomoteur
-int positionShutter = 0; // Permet de conserver la position du servomoteur
+unsigned int positionShutter = 0; // Permet de conserver la position du servomoteur
 
 void testServo() {
   shutterServomoteur.write(dShutterOn);
