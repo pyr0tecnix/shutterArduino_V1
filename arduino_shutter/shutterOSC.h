@@ -92,7 +92,7 @@ void getPositionShutter(OSCMessage &msg, int addrOffset) {
 
   msg.empty();
   msg.add("/shutter_position/");
-  msg.add((int)positionShutter);
+  msg.add(positionShutter);
   Serial.print("Envoi de la position : ");
   Serial.println(positionShutter);
   Udp.beginPacket(master_osc_ip, master_osc_port); //Début de l'émission et envoie de l'entête
